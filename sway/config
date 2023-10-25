@@ -1,0 +1,270 @@
+# This is a basic Sway config file
+#
+# For more options and information, refer to the official documentation:
+# https://swaywm.org/config/
+
+# Set the default orientation to horizontal (split horizontally)
+# orientation horizontal
+
+# Configure your input devices here (e.g., keyboard, touchpad)
+
+### Variables
+#
+# Super key. Use Mod1 for Alt.
+set $mod Mod4
+
+# Home row direction keys, like vim
+set $left h
+set $down j
+set $up k
+set $right l
+
+set $term alacritty
+# set $menu dmenu_path | dmenu | xargs swaymsg exec --
+
+font JetBrainsMono Nerd Font 11
+# font pango:Ubuntu 11
+
+# Something that might fix sleep?
+exec systemctl --user import-environment DBUS_SESSION_BUS_ADDRESS
+exec systemctl --user import-environment XDG_SESSION_TYPE
+exec systemctl --user import-environment XDG_CURRENT_DESKTOP
+exec systemctl --user import-environment XDG_SESSION_DESKTOP
+
+# We hate borders
+default_border pixel 3
+smart_borders on
+gaps {
+  inner 3
+  outer 3
+}
+
+# Fix keyboard and shit
+input type:keyboard xkb_layout "fi"
+input * {
+  natural_scroll enabled
+  tap enabled
+  pointer_accel 0.5
+}
+
+### Focus
+focus_follows_mouse no
+
+# Launch Rofi
+# bindsym $mod+d exec rofi -show run
+# bindsym $mod+d exec ../rofi/launchers/type-4/launcher.sh
+bindsym $mod+p exec --no-startup-id ~/.config/rofi/launchers/type-1/launcher.sh
+
+# Color picker
+bindsym $mod+Shift+p exec grim -g "$(slurp -p)" -t ppm - | convert - -format '%[pixel:p{0,0}]' txt:- | tail -n 1 | cut -d ' ' -f 4 | wl-copy
+
+# Launch network-manager
+bindsym $mod+i exec alacritty -e ~/.config/sway-scripts/network-manager
+
+# Screenshot to clipboard
+bindsym $mod+Shift+s exec grim -g "$(slurp)" - | wl-copy -t image/png
+
+# Launch Waybar
+bar {
+    swaybar_command waybar
+    position top
+}
+include /etc/sway/config-vars.d/*
+
+### Output configuration
+#
+# Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
+# output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
+output * bg /home/joar/Pictures/Wallpapers/abstract-nature-art-wallpaper-3997087511.jpeg fill
+
+# Lock Screen
+bindsym $mod+Shift+x exec bash ~/.config/sway-scripts/swaglock.sh
+# bindsym $mod+Shift+x exec swaylock -f -c 000000
+
+# Swayidle, 10min timeout
+exec swayidle -w \
+  # timeout 600 'swaylock -f -c 000000' \
+  timeout 600 'bash ~/.config/sway-scripts/swaglock.sh' \
+  timeout 900 'swaymsg "output * dpms off"' \
+  resume 'swaymsg "output * dpms on"' \
+  timeout 930 'systemctl suspend' \
+  before-sleep 'bash ~/.config/sway-scripts/swaglock.sh'
+  # before-sleep 'swaymsg "output * dpms off"'
+
+
+
+### Key bindings
+#
+# Basics:
+#
+    # bindsym alt+Tab exec ~/sway/scripts/Swytch/swytch.sh
+    #
+    # bindsym $mod+ctrl+a exec ~/sway/scripts/audio_switch.sh
+
+    # start a terminal
+    bindsym $mod+Return exec $term
+
+    # kill focused window
+    bindsym $mod+Shift+q kill
+
+    # start your launcher
+    bindsym $mod+Space exec $menu
+
+    # Start output recording for screenshare
+    # bindsym $mod+Shift+r exec sway-screenshare.sh
+
+    # Audio config
+    bindsym $mod+Shift+a exec pavucontrol
+    # bindsym $mod+Shift+a exec pavucontrol
+
+    # Drag floating windows by holding down $mod and left mouse button.
+    # Resize them with right mouse button + $mod.
+    # Despite the name, also works for non-floating windows.
+    # Change normal to inverse to use left mouse button for resizing and right
+    # mouse button for dragging.
+    floating_modifier $mod normal
+
+    # reload the configuration file
+    bindsym $mod+Shift+c reload
+
+    # exit sway (logs you out of your Wayland session)
+    bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -b 'Yes, exit sway' 'swaymsg exit'
+#
+# Moving around:
+#
+    # Move your focus around
+    bindsym $mod+$left focus left
+    bindsym $mod+$down focus down
+    bindsym $mod+$up focus up
+    bindsym $mod+$right focus right
+
+    # or use $mod+[up|down|left|right]
+    bindsym $mod+Left focus left
+    bindsym $mod+Down focus down
+    bindsym $mod+Up focus up
+    bindsym $mod+Right focus right
+
+    # _move_ the focused window with the same, but add Shift
+    bindsym $mod+Shift+$left move left
+    bindsym $mod+Shift+$down move down
+    bindsym $mod+Shift+$up move up
+    bindsym $mod+Shift+$right move right
+    # ditto, with arrow keys
+    bindsym $mod+Shift+Left move left
+    bindsym $mod+Shift+Down move down
+    bindsym $mod+Shift+Up move up
+    bindsym $mod+Shift+Right move right
+#
+# Workspaces:
+#
+    # Move workspaces
+    bindsym Ctrl+$mod+Left  move workspace to output left
+    bindsym Ctrl+$mod+Right move workspace to output right
+    bindsym Ctrl+$mod+Up    move workspace to output up
+    bindsym Ctrl+$mod+Down  move workspace to output down
+
+    # switch to workspace
+    bindsym $mod+1 workspace 1
+    bindsym $mod+2 workspace 2
+    bindsym $mod+3 workspace 3
+    bindsym $mod+4 workspace 4
+    bindsym $mod+5 workspace 5
+    bindsym $mod+6 workspace 6
+    bindsym $mod+7 workspace 7
+    bindsym $mod+8 workspace 8
+    bindsym $mod+9 workspace 9
+    bindsym $mod+0 workspace 10
+
+    # move focused container to workspace
+    bindsym $mod+Shift+1 move container to workspace 1
+    bindsym $mod+Shift+2 move container to workspace 2
+    bindsym $mod+Shift+3 move container to workspace 3
+    bindsym $mod+Shift+4 move container to workspace 4
+    bindsym $mod+Shift+5 move container to workspace 5
+    bindsym $mod+Shift+6 move container to workspace 6
+    bindsym $mod+Shift+7 move container to workspace 7
+    bindsym $mod+Shift+8 move container to workspace 8
+    bindsym $mod+Shift+9 move container to workspace 9
+    bindsym $mod+Shift+0 move container to workspace 10
+    # Note: workspaces can have any name you want, not just numbers.
+    # We just use 1-10 as the default.
+#
+# Layout stuff:
+#
+    # You can "split" the current object of your focus with
+    # $mod+b or $mod+v, for horizontal and vertical splits
+    # respectively.
+    bindsym $mod+b splith
+    bindsym $mod+v splitv
+
+    # Switch the current container between different layout styles
+    bindsym $mod+s layout stacking
+    bindsym $mod+w layout tabbed
+    bindsym $mod+e layout toggle split
+
+    # Make the current focus fullscreen
+    bindsym $mod+f fullscreen
+
+    # Toggle the current focus between tiling and floating mode
+    bindsym $mod+Shift+space floating toggle
+
+    # Swap focus between the tiling area and the floating area
+    bindsym $mod+Alt+space focus mode_toggle
+
+    # move focus to the parent container
+    bindsym $mod+a focus parent
+#
+# Scratchpad:
+#
+    # Sway has a "scratchpad", which is a bag of holding for windows.
+    # You can send windows there and get them back later.
+
+    # Move the currently focused window to the scratchpad
+    bindsym $mod+Shift+minus move scratchpad
+
+    # Show the next scratchpad window or hide the focused scratchpad window.
+    # If there are multiple scratchpad windows, this command cycles through them.
+    bindsym $mod+minus scratchpad show
+
+#
+# Resizing containers:
+#
+mode "resize" {
+    # left will shrink the containers width
+    # right will grow the containers width
+    # up will shrink the containers height
+    # down will grow the containers height
+    bindsym $left resize shrink width 10px
+    bindsym $down resize grow height 10px
+    bindsym $up resize shrink height 10px
+    bindsym $right resize rgrow width 10px
+
+    # ditto, with arrow keys
+    bindsym Left resize shrink width 10px
+    bindsym Down resize grow height 10px
+    bindsym Up resize shrink height 10px
+    bindsym Right resize grow width 10px
+
+    # return to default mode
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $mod+r mode "resize"
+# Start a terminal emulator on startup
+# exec gnome-terminal
+include /etc/sway/config.d/*
+
+# Set a default font (you may need to install a font package first)
+# font pango:DejaVu Sans 10
+
+# Map your modifier keys (replace Mod1/Mod4 with your preferred modifier keys)
+# bindsym Mod1+Enter exec gnome-terminal
+# bindsym Mod4+d exec dmenu_run
+# bindsym Mod4+Shift+e exec "gnome-session-quit --logout --no-prompt"
+
+# Map your workspaces (replace "1", "2", etc. with meaningful names)
+# workspace 1 output * bg ~/path/to/your/wallpaper.jpg
+# workspace 2 output * bg ~/path/to/another/wallpaper.jpg
+
+# Autostart applications
+# exec_always feh --bg-fill ~/path/to/default/wallpaper.jpg
