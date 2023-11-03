@@ -75,20 +75,42 @@ include /etc/sway/config-vars.d/*
 #
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
 # output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
-output * bg /home/joar/Pictures/Wallpapers/abstract-nature-art-wallpaper-3997087511.jpeg fill
+# output * bg /home/joar/Pictures/Wallpapers/abstract-nature-art-wallpaper-3997087511.jpeg fill
+output * bg /home/joar/Pictures/Wallpapers/14.png fill 
 
 # Lock Screen
-bindsym $mod+Shift+x exec bash ~/.config/sway-scripts/swaglock.sh
+# bindsym $mod+Shift+x exec bash ~/.config/sway-scripts/swaglock.sh
+bindsym $mod+Shift+x exec swaylock 
+# bindsym $mod+Shift+x exec swaylock \
+# 	--screenshots \
+#   --daemonize \
+#   --image ~/Pictures/Wallpapers/14.png \
+# 	--clock \
+# 	--indicator \
+# 	--indicator-radius 100 \
+# 	--indicator-thickness 7 \
+# 	--effect-blur 7x5 \
+# 	--effect-vignette 0.5:0.5 \
+# 	--ring-color 333333 \
+# 	--key-hl-color 880033 \
+# 	--line-color 00000000 \
+# 	--inside-color 00000088 \
+# 	--separator-color 00000000 \
+#   --font Ubuntu \
+# 	--grace 5 \
+# 	--fade-in 0.2
 # bindsym $mod+Shift+x exec swaylock -f -c 000000
 
 # Swayidle, 10min timeout
 exec swayidle -w \
   # timeout 600 'swaylock -f -c 000000' \
-  timeout 600 'bash ~/.config/sway-scripts/swaglock.sh' \
+  timeout 600 'swaylock -f' \
+  # timeout 600 'bash ~/.config/sway-scripts/swaglock.sh' \
   timeout 900 'swaymsg "output * dpms off"' \
   resume 'swaymsg "output * dpms on"' \
   timeout 930 'systemctl suspend' \
-  before-sleep 'bash ~/.config/sway-scripts/swaglock.sh'
+  before-sleep 'swaylock -f'
+  # before-sleep 'bash ~/.config/sway-scripts/swaglock.sh'
   # before-sleep 'swaymsg "output * dpms off"'
 
 

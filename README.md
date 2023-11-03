@@ -9,6 +9,8 @@ This is the repo for ym SwayWM dots.
 ## Required stuff
 - Sway
 - Swaylock
+    - Swaylock-effects, although it can be done without it, just doesn't look as nice
+    - Might have to build from source, for example on Ubuntu as of 04.11.2023
 - Waybar
 - Rofi (althought maybe Ulauncher soon?)
 
