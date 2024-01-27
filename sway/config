@@ -50,10 +50,14 @@ input * {
 ### Focus
 focus_follows_mouse no
 
+# Start dunst
+exec dunst &
+
 # Launch Rofi
 # bindsym $mod+d exec rofi -show run
 # bindsym $mod+d exec ../rofi/launchers/type-4/launcher.sh
 bindsym $mod+p exec --no-startup-id ~/.config/rofi/launchers/type-1/launcher.sh
+bindsym $mod+tab workspace back_and_forth
 
 # Color picker
 bindsym $mod+Shift+p exec grim -g "$(slurp -p)" -t ppm - | convert - -format '%[pixel:p{0,0}]' txt:- | tail -n 1 | cut -d ' ' -f 4 | wl-copy
@@ -102,16 +106,16 @@ bindsym $mod+Shift+x exec swaylock
 # bindsym $mod+Shift+x exec swaylock -f -c 000000
 
 # Swayidle, 10min timeout
-exec swayidle -w \
   # timeout 600 'swaylock -f -c 000000' \
-  timeout 600 'swaylock -f' \
   # timeout 600 'bash ~/.config/sway-scripts/swaglock.sh' \
+  # before-sleep 'bash ~/.config/sway-scripts/swaglock.sh'
+  # before-sleep 'swaymsg "output * dpms off"'
+exec swayidle -w \
+  timeout 600 'swaylock -f' \
   timeout 900 'swaymsg "output * dpms off"' \
   resume 'swaymsg "output * dpms on"' \
   timeout 930 'systemctl suspend' \
   before-sleep 'swaylock -f'
-  # before-sleep 'bash ~/.config/sway-scripts/swaglock.sh'
-  # before-sleep 'swaymsg "output * dpms off"'
 
 
 
